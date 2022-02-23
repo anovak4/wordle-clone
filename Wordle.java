@@ -17,32 +17,55 @@ public class Wordle implements KeyListener {
         words = new JLabel[6][5];
         for (int w = 0; w < words.length; w++) {
             for (int l = 0; l < words[w].length; l++) {
-                JLabel letter = new JLabel();
+            	JLabel letter = new JLabel();
                 letter.setOpaque(true); //needed to be able to set the background
                 letter.setBackground(new Color(194, 194, 194));
                 letter.setForeground(Color.black);
-                // letter.setText(w + "-" + l);
-                letter.setPreferredSize(new Dimension(60,60));
-                letter.setFont(new Font("Arial", Font.BOLD, 35));
+                letter.setPreferredSize(new Dimension(40,60));
+                letter.setFont(new Font("Arial", Font.BOLD, 40));
+				letter.setHorizontalAlignment(SwingConstants.CENTER);
                 wordPanel.add(letter);
                 letter.addKeyListener(this);
                 words[w][l] = letter;
             }
         }
 
-        // final setup to make things visible
+        // final setup
+		frame.pack();
         frame.add(wordPanel, BorderLayout.NORTH);
-        frame.setSize(375, 455);
+        frame.setSize(300, 450);
+		words[wordIndex][letterIndex].requestFocusInWindow(); 
         frame.setVisible(true);    
     }
 
-    // not working
+	private void checkAnswer(){
+		System.out.println("Checking answer...");
+
+		wordIndex++;
+		letterIndex = 0;
+	}
+
     public void keyTyped(KeyEvent e) {
-        words[wordIndex][letterIndex].setText(String.valueOf(e.getKeyChar()));
+        words[wordIndex][letterIndex].setText(String.valueOf(e.getKeyChar()).toUpperCase());
+		letterIndex++;
+		if(letterIndex >= 5) {
+			checkAnswer();
+		}
     }
 
-    // only need these two because we're implementing KeyListener
-    public void keyPressed(KeyEvent e) {}
+    public void keyPressed(KeyEvent e) {
+		if(e.getKeyCode() == KeyEvent.VK_BACK_SPACE) {
+			if(letterIndex > 0) {
+				letterIndex--;
+			}
+			words[wordIndex][letterIndex].setText("");
+		}
+		// if(e.getKeyCode() == KeyEvent.VK_ENTER) {
+		// 	checkAnswer();
+		// }
+	}
+
+	// only need this because I'm implementing KeyListener
     public void keyReleased(KeyEvent e) {}
     
 }
